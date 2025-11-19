@@ -20,15 +20,11 @@ import * as S from './LoginScreen.styles';
 import { Path } from 'react-native-svg';
 
 const LoginScreen = ({ navigation }: Props) => {
-  // Pegamos a função signIn do nosso contexto
   const { signIn } = useAuth();
-
   const [isPasswordVisible, setPasswordVisible] = useState(false);
   const [rememberMe, setRememberMe] = useState(false); 
-  
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  
   const [isLoading, setIsLoading] = useState(false);
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
