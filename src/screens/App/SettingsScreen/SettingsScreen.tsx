@@ -66,6 +66,15 @@ const SettingsScreen = () => {
           />
         </S.SettingItem>
 
+        <S.SettingItem onPress={() => navigation.navigate('ChangePassword' as never)}>
+          <MaterialCommunityIcons name="lock-reset" size={24} color={theme.colors.icon} />
+          <S.SettingTextContainer>
+            <S.SettingTitle>Alterar Senha</S.SettingTitle>
+            <S.SettingSubtitle>Atualize sua segurança</S.SettingSubtitle>
+          </S.SettingTextContainer>
+          <MaterialCommunityIcons name="chevron-right" size={24} color="#666" />
+        </S.SettingItem>
+
         {/* Links */}
         <S.SettingItem onPress={() => navigation.navigate('TermsOfUse' as never)}>
           <MaterialCommunityIcons name="file-document-outline" size={24} color="#666" />

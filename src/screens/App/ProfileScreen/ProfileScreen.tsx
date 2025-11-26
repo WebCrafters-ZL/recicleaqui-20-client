@@ -86,50 +86,7 @@ const ProfileScreen = () => {
   const [complement, setComplement] = useState('');
 
   // --- ESTADOS DE SEGURANÇA ---
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmNewPassword, setConfirmNewPassword] = useState('');
-  const [passwordStrength, setPasswordStrength] = useState(0);
-
   const [isProfileLoading, setIsProfileLoading] = useState(false);
-  const [isPasswordLoading, setIsPasswordLoading] = useState(false);
-
-  const [showCurrentPass, setShowCurrentPass] = useState(false);
-  const [showNewPass, setShowNewPass] = useState(false);
-  const [showConfirmPass, setShowConfirmPass] = useState(false);
-
-  // Lógica de Força de Senha
-  useEffect(() => {
-    const checkStrength = (pass: string) => {
-      if (!pass) return 0;
-      const hasLength = pass.length >= 8;
-      const hasUpper = /[A-Z]/.test(pass);
-      const hasNumber = /[0-9]/.test(pass);
-      const hasSpecial = /[^A-Za-z0-9]/.test(pass);
-
-      if (!hasLength || !hasUpper || !hasNumber) return 1;
-      let score = 2;
-      if (hasSpecial) score += 1;
-      if (pass.length > 10 && hasSpecial) score += 1;
-      return score;
-    };
-    setPasswordStrength(checkStrength(newPassword));
-  }, [newPassword]);
-
-  const getStrengthColor = () => {
-    if (passwordStrength <= 1) return '#ff4444';
-    if (passwordStrength === 2) return '#ffbb33';
-    if (passwordStrength === 3) return '#00C851';
-    return '#007E33';
-  };
-
-  const getStrengthLabel = () => {
-    if (passwordStrength === 0) return '';
-    if (passwordStrength <= 1) return 'Fraca';
-    if (passwordStrength === 2) return 'Média';
-    if (passwordStrength === 3) return 'Forte';
-    return 'Muito Forte';
-  };
 
   useEffect(() => {
     loadUserData();
@@ -287,42 +244,7 @@ const ProfileScreen = () => {
     }
   };
 
-  const handleChangePassword = async () => {
-    if (!currentPassword || !newPassword || !confirmNewPassword) {
-      Alert.alert("Atenção", "Preencha todos os campos de senha.");
-      return;
-    }
-
-    if (passwordStrength < 2) {
-      Alert.alert("Senha Fraca", "A nova senha deve ter no mínimo 8 caracteres, uma letra maiúscula e um número.");
-      return;
-    }
-
-    if (newPassword !== confirmNewPassword) {
-      Alert.alert("Erro", "As senhas não conferem.");
-      return;
-    }
-
-    setIsPasswordLoading(true);
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-
-      Alert.alert("Sucesso", "Senha alterada com sucesso!");
-      setCurrentPassword(''); setNewPassword(''); setConfirmNewPassword('');
-    } catch (error) {
-      Alert.alert("Erro", "Falha ao alterar senha.");
-    } finally {
-      setIsPasswordLoading(false);
-    }
-  };
-
-  const handleLogout = () => {
-    Alert.alert("Sair", "Deseja realmente sair?", [
-      { text: "Cancelar", style: "cancel" },
-      { text: "Sair", onPress: signOut, style: "destructive" }
-    ]);
-  };
-
+  
   return (
     <S.Container>
       <S.BackButton onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>
@@ -433,54 +355,6 @@ const ProfileScreen = () => {
           </S.Row>
           <View style={{ marginTop: 15 }}>
             <Button title="SALVAR DADOS" onPress={handleSaveProfile} isLoading={isProfileLoading} />
-          </View>
-        </S.FormCard>
-
-        {/* SEGURANÇA */}
-        <S.FormCard>
-          <S.SectionTitle>Alterar Senha</S.SectionTitle>
-
-          <TextInput
-            placeholder="Senha Atual"
-            value={currentPassword}
-            onChangeText={setCurrentPassword}
-            secureTextEntry={!showCurrentPass}
-            rightIcon={<MaterialCommunityIcons name={showCurrentPass ? "eye-off" : "eye"} size={20} color={COLORS.gray} />}
-            onRightPress={() => setShowCurrentPass(!showCurrentPass)}
-          />
-
-          <S.HelperText>Mínimo 8 caracteres, 1 maiúscula e 1 número.</S.HelperText>
-
-          <TextInput
-            placeholder="Nova Senha"
-            value={newPassword}
-            onChangeText={setNewPassword}
-            secureTextEntry={!showNewPass}
-            rightIcon={<MaterialCommunityIcons name={showNewPass ? "eye-off" : "eye"} size={20} color={COLORS.gray} />}
-            onRightPress={() => setShowNewPass(!showNewPass)}
-          />
-
-          {/* Barra de Força */}
-          {newPassword.length > 0 && (
-            <S.StrengthContainer>
-              <S.StrengthBarContainer>
-                <S.StrengthBarFill width={`${(passwordStrength / 4) * 100}%`} color={getStrengthColor()} />
-              </S.StrengthBarContainer>
-              <S.StrengthLabel color={getStrengthColor()}>{getStrengthLabel()}</S.StrengthLabel>
-            </S.StrengthContainer>
-          )}
-
-          <TextInput
-            placeholder="Confirmar Nova"
-            value={confirmNewPassword}
-            onChangeText={setConfirmNewPassword}
-            secureTextEntry={!showConfirmPass}
-            rightIcon={<MaterialCommunityIcons name={showConfirmPass ? "eye-off" : "eye"} size={20} color={COLORS.gray} />}
-            onRightPress={() => setShowConfirmPass(!showConfirmPass)}
-          />
-
-          <View style={{ marginTop: 15 }}>
-            <Button title="ATUALIZAR SENHA" onPress={handleChangePassword} isLoading={isPasswordLoading} />
           </View>
         </S.FormCard>
 
