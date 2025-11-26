@@ -1,16 +1,23 @@
 // Arquivo: src/screens/App/SettingsScreen/SettingsScreen.styles.ts
+
 import styled from 'styled-components/native';
-import { COLORS } from '../../../constants/colors';
+import { lightTheme } from '../../../constants/colors';
+
+type ThemeProps = {
+  theme: typeof lightTheme;
+};
 
 export const Container = styled.View`
   flex: 1;
-  background-color: ${COLORS.background};
+  /* --- 2. USAMOS O TIPO AQUI: (props: ThemeProps) --- */
+  background-color: ${(props: ThemeProps) => props.theme.colors.background};
 `;
 
 export const Header = styled.View`
   padding: 20px;
   padding-top: 60px;
-  background-color: ${COLORS.primary};
+  /* Tipamos aqui também */
+  background-color: ${(props: ThemeProps) => props.theme.colors.primary};
   height: 140px;
   justify-content: center;
   align-items: center;
@@ -23,7 +30,8 @@ export const Header = styled.View`
 export const Title = styled.Text`
   font-size: 22px;
   font-family: 'Montserrat-Bold';
-  color: ${COLORS.white};
+  /* Tipamos aqui */
+  color: ${(props: ThemeProps) => props.theme.colors.white};
   margin-top: 20px;
 `;
 
@@ -33,7 +41,8 @@ export const MenuButton = styled.TouchableOpacity`
   left: 20px;
   z-index: 10;
   padding: 8px;
-  background-color: ${COLORS.whiteTransparent || 'rgba(255,255,255,0.2)'};
+  /* Tipamos aqui */
+  background-color: ${(props: ThemeProps) => props.theme.colors.whiteTransparent || 'rgba(255,255,255,0.2)'};
   border-radius: 12px;
 `;
 
@@ -42,11 +51,11 @@ export const Content = styled.ScrollView`
   padding: 20px;
 `;
 
-// Item de Configuração (Linha com ícone, texto e switch/seta)
 export const SettingItem = styled.TouchableOpacity`
   flex-direction: row;
   align-items: center;
-  background-color: ${COLORS.white};
+  /* Tipamos aqui */
+  background-color: ${(props: ThemeProps) => props.theme.colors.surface};
   padding: 16px;
   border-radius: 16px;
   margin-bottom: 12px;
@@ -65,12 +74,14 @@ export const SettingTextContainer = styled.View`
 export const SettingTitle = styled.Text`
   font-size: 14px;
   font-family: 'Montserrat-Bold';
-  color: ${COLORS.text};
+  /* Tipamos aqui */
+  color: ${(props: ThemeProps) => props.theme.colors.text};
 `;
 
 export const SettingSubtitle = styled.Text`
   font-size: 12px;
   font-family: 'Montserrat-Regular';
-  color: #888;
+  /* Tipamos aqui */
+  color: ${(props: ThemeProps) => props.theme.colors.textLight};
   margin-top: 2px;
 `;

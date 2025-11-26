@@ -12,12 +12,13 @@ export const Header = styled.View`
   padding: 20px;
   padding-top: 60px;
   background-color: ${COLORS.primary};
-  height: 120px; /* Um pouco menor que a Home */
-  align-items: center;
+  height: 140px;
   justify-content: center;
+  align-items: center;
   border-bottom-left-radius: 30px;
   border-bottom-right-radius: 30px;
   position: relative;
+  z-index: 10;
 `;
 
 export const Title = styled.Text`

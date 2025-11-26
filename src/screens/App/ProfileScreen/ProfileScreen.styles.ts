@@ -1,16 +1,22 @@
 // Arquivo: src/screens/App/ProfileScreen/ProfileScreen.styles.ts
 
 import styled from 'styled-components/native';
-import { COLORS } from '../../../constants/colors';
+import { lightTheme } from '../../../constants/colors';
+
+type ThemeProps = {
+  theme: typeof lightTheme;
+};
+
 
 export const Container = styled.View`
   flex: 1;
-  background-color: ${COLORS.background};
+  /* CORREÇÃO: Fundo dinâmico */
+  background-color: ${(props: ThemeProps) => props.theme.colors.background};
 `;
 
 export const HeaderBackground = styled.View`
   height: 140px;
-  background-color: ${COLORS.primary};
+  background-color: ${(props: ThemeProps) => props.theme.colors.primary};
   border-bottom-left-radius: 30px;
   border-bottom-right-radius: 30px;
   align-items: center;
@@ -19,7 +25,7 @@ export const HeaderBackground = styled.View`
 `;
 
 export const HeaderTitle = styled.Text`
-  color: ${COLORS.white};
+  color: ${(props: ThemeProps) => props.theme.colors.white};
   font-size: 20px;
   font-family: 'Montserrat-Bold';
   margin-bottom: 20px;
@@ -44,28 +50,28 @@ export const AvatarImage = styled.Image`
   height: 120px;
   border-radius: 60px;
   border-width: 4px;
-  border-color: ${COLORS.white};
-  background-color: ${COLORS.placeholder}; 
+  border-color: ${(props: ThemeProps) => props.theme.colors.surface};
+  background-color: ${(props: ThemeProps) => props.theme.colors.placeholder}; 
 `;
 
 export const EditIconContainer = styled.TouchableOpacity`
   position: absolute;
   bottom: 0;
   right: 0;
-  background-color: ${COLORS.primary};
+  background-color: ${(props: ThemeProps) => props.theme.colors.primary};
   width: 36px;
   height: 36px;
   border-radius: 18px;
   justify-content: center;
   align-items: center;
   border-width: 3px;
-  border-color: ${COLORS.white};
+  border-color: ${(props: ThemeProps) => props.theme.colors.surface};
   elevation: 4;
 `;
 
 // --- CARDS ---
 export const FormCard = styled.View`
-  background-color: ${COLORS.white};
+  background-color: ${(props: ThemeProps) => props.theme.colors.surface};
   border-radius: 20px;
   padding: 20px;
   shadow-color: #000;
@@ -79,7 +85,7 @@ export const FormCard = styled.View`
 export const SectionTitle = styled.Text`
   font-size: 16px;
   font-family: 'Montserrat-Bold';
-  color: ${COLORS.text};
+  color: ${(props: ThemeProps) => props.theme.colors.text};
   margin-bottom: 15px;
   margin-left: 5px;
 `;
@@ -97,17 +103,16 @@ export const Col = styled.View<ColProps>`
   flex: ${(props: ColProps) => props.flex || 1};
 `;
 
-// --- TEXTO DE AJUDA ---
+// --- TEXTOS E BARRAS ---
 export const HelperText = styled.Text`
   font-size: 11px;
-  color: ${COLORS.textLight};
+  color: ${(props: ThemeProps) => props.theme.colors.textLight};
   margin-top: -5px;
   margin-bottom: 10px;
   margin-left: 5px;
   font-family: 'Montserrat-Regular';
 `;
 
-// --- BARRA DE FORÇA ---
 export const StrengthContainer = styled.View`
   margin-top: 5px;
   margin-bottom: 15px;
@@ -117,7 +122,7 @@ export const StrengthBarContainer = styled.View`
   flex-direction: row;
   height: 4px;
   width: 100%;
-  background-color: #eee; 
+  background-color: ${(props: ThemeProps) => props.theme.colors.border};
   border-radius: 2px;
   overflow: hidden;
 `;
@@ -149,13 +154,15 @@ export const LogoutButton = styled.TouchableOpacity`
   padding: 15px;
   border-radius: 12px;
   border-width: 1px;
-  border-color: ${COLORS.errorBorder}; 
-  background-color: ${COLORS.errorLight};
+  
+  border-color: ${(props: ThemeProps) => props.theme.colors.errorBorder}; 
+  background-color: ${(props: ThemeProps) => props.theme.colors.errorLight};
+  
   margin-bottom: 40px;
 `;
 
 export const LogoutText = styled.Text`
-  color: ${COLORS.error};
+  color: ${(props: ThemeProps) => props.theme.colors.error};
   font-family: 'Montserrat-Bold';
   font-size: 14px;
   margin-left: 8px;
@@ -167,6 +174,6 @@ export const BackButton = styled.TouchableOpacity`
   left: 20px;
   z-index: 10;
   padding: 8px;
-  background-color: ${COLORS.whiteTransparent};
+  background-color: ${(props: ThemeProps) => props.theme.colors.whiteTransparent};
   border-radius: 12px;
 `;

@@ -1,17 +1,17 @@
 // Arquivo: src/screens/App/DisposalScreen/DisposalScreen.styles.ts
 
 import styled from 'styled-components/native';
-import { COLORS } from '../../../constants/colors';
 
 export const Container = styled.View`
   flex: 1;
-  background-color: ${COLORS.background};
+  /* Fundo Dinâmico */
+  background-color: ${(props: any) => props.theme.colors.background};
 `;
 
 export const Header = styled.View`
   padding: 20px;
   padding-top: 60px;
-  background-color: ${COLORS.primary};
+  background-color: ${(props: any) => props.theme.colors.primary};
   border-bottom-left-radius: 30px;
   border-bottom-right-radius: 30px;
   margin-bottom: 20px;
@@ -20,7 +20,7 @@ export const Header = styled.View`
 export const Title = styled.Text`
   font-size: 22px;
   font-family: 'Montserrat-Bold';
-  color: ${COLORS.white};
+  color: ${(props: any) => props.theme.colors.white};
   text-align: center;
 `;
 
@@ -40,7 +40,8 @@ export const Content = styled.ScrollView`
 export const SectionTitle = styled.Text`
   font-size: 18px;
   font-family: 'Montserrat-Bold';
-  color: ${COLORS.text};
+  /* Texto Dinâmico */
+  color: ${(props: any) => props.theme.colors.text};
   margin-bottom: 15px;
   margin-top: 10px;
 `;
@@ -48,7 +49,7 @@ export const SectionTitle = styled.Text`
 export const DescriptionText = styled.Text`
   font-size: 14px;
   font-family: 'Montserrat-Regular';
-  color: #666;
+  color: ${(props: any) => props.theme.colors.textLight};
   margin-bottom: 20px;
 `;
 
@@ -60,7 +61,8 @@ interface SelectionCardProps {
 }
 
 export const SelectionCard = styled.TouchableOpacity<SelectionCardProps>`
-  background-color: ${COLORS.white};
+  /* Fundo do cartão muda no dark */
+  background-color: ${(props: any) => props.theme.colors.surface};
   padding: 20px;
   border-radius: 16px;
   margin-bottom: 15px;
@@ -73,7 +75,7 @@ export const SelectionCard = styled.TouchableOpacity<SelectionCardProps>`
   shadow-opacity: 0.1;
   shadow-radius: 4px;
 
-  border-color: ${(props: SelectionCardProps) => (props.selected ? (props.color || COLORS.primary) : 'transparent')};
+  border-color: ${(props: any) => (props.selected ? (props.color || props.theme.colors.primary) : 'transparent')};
 `;
 
 interface IconContainerProps {
@@ -87,7 +89,7 @@ export const IconContainer = styled.View<IconContainerProps>`
   justify-content: center;
   align-items: center;
   margin-right: 15px;
-  background-color: ${(props: IconContainerProps) => props.color || '#eee'};
+  background-color: ${(props: any) => props.color || props.theme.colors.background};
 `;
 
 export const CardContent = styled.View`
@@ -97,14 +99,14 @@ export const CardContent = styled.View`
 export const CardTitle = styled.Text`
   font-size: 16px;
   font-family: 'Montserrat-Bold';
-  color: ${COLORS.text};
+  color: ${(props: any) => props.theme.colors.text};
   margin-bottom: 2px;
 `;
 
 export const CardDescription = styled.Text`
   font-size: 12px;
   font-family: 'Montserrat-Regular';
-  color: #666;
+  color: ${(props: any) => props.theme.colors.textLight};
   margin-top: 4px;
   flex-wrap: wrap;
 `;
@@ -113,7 +115,7 @@ export const CardDescription = styled.Text`
 export const FormLabel = styled.Text`
   font-size: 14px;
   font-family: 'Montserrat-Bold';
-  color: #555;
+  color: ${(props: any) => props.theme.colors.text};
   margin-bottom: 8px;
   margin-top: 10px;
 `;
@@ -125,25 +127,25 @@ export const ButtonContainer = styled.View`
 
 // --- LISTA DE PONTOS ---
 export const PointCard = styled.TouchableOpacity`
-  background-color: ${COLORS.white};
+  background-color: ${(props: any) => props.theme.colors.surface};
   padding: 15px;
   border-radius: 12px;
   margin-bottom: 10px;
   border-left-width: 5px;
-  border-left-color: ${COLORS.primary};
+  border-left-color: ${(props: any) => props.theme.colors.primary};
   elevation: 2;
 `;
 
 export const PointName = styled.Text`
   font-size: 16px;
   font-family: 'Montserrat-Bold';
-  color: ${COLORS.text};
+  color: ${(props: any) => props.theme.colors.text};
 `;
 
 export const PointAddress = styled.Text`
   font-size: 13px;
   font-family: 'Montserrat-Regular';
-  color: #666;
+  color: ${(props: any) => props.theme.colors.textLight};
   margin-top: 4px;
 `;
 
@@ -151,7 +153,7 @@ export const PointDistance = styled.View`
   position: absolute;
   top: 15px;
   right: 15px;
-  background-color: #e8f5e9;
+  background-color: ${(props: any) => props.theme.colors.background};
   padding: 4px 8px;
   border-radius: 12px;
 `;
@@ -159,7 +161,7 @@ export const PointDistance = styled.View`
 export const DistanceText = styled.Text`
   font-size: 12px;
   font-family: 'Montserrat-Bold';
-  color: ${COLORS.primary};
+  color: ${(props: any) => props.theme.colors.primary};
 `;
 
 export const PointFooter = styled.View`
@@ -167,12 +169,12 @@ export const PointFooter = styled.View`
   flex-direction: row;
   align-items: center;
   border-top-width: 1px;
-  border-top-color: #f0f0f0;
+  border-top-color: ${(props: any) => props.theme.colors.border};
   padding-top: 8px;
 `;
 
 export const CardActionText = styled.Text`
-  color: ${COLORS.primary};
+  color: ${(props: any) => props.theme.colors.primary};
   margin-left: 6px;
   font-size: 13px;
   font-family: 'Montserrat-Bold';
@@ -184,11 +186,10 @@ export const BackButton = styled.TouchableOpacity`
   left: 20px;
   z-index: 10;
   padding: 8px;
-  background-color: ${COLORS.whiteTransparent || 'rgba(255,255,255,0.2)'};
+  background-color: ${(props: any) => props.theme.colors.whiteTransparent};
   border-radius: 12px;
 `;
 
-// Estilo objeto para passar para o TextInput multiline
 export const textAreaStyle = {
   height: 120,
   textAlignVertical: 'top' as const,
