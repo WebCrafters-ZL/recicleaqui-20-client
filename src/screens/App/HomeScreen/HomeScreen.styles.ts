@@ -1,20 +1,22 @@
 // Arquivo: src/screens/App/HomeScreen/HomeScreen.styles.ts
 
 import styled from 'styled-components/native';
-import { COLORS } from '../../../constants/colors';
 
 export const Container = styled.View`
   flex: 1;
-  background-color: ${COLORS.background};
+  /* Fundo dinâmico (Branco no Light / Preto no Dark) */
+  background-color: ${(props: any) => props.theme.colors.background};
 `;
 
 // ============= HEADER =============
 export const Header = styled.View`
-  background-color: ${COLORS.primary};
-  height: 140px; 
-  justify-content: center; 
+  /* O Header Verde (Primary) mantém a cor da marca nos dois temas */
+  background-color: ${(props: any) => props.theme.colors.primary};
+  height: 140px;
+  justify-content: center;
   border-bottom-left-radius: 30px;
   border-bottom-right-radius: 30px;
+  
   elevation: 0; 
   shadow-opacity: 0;
   z-index: 0; 
@@ -27,19 +29,19 @@ export const HeaderTop = styled.View`
   align-items: center;
   padding: 0 24px; 
   width: 100%;
-  margin-top: 20px; 
+  margin-top: 20px;
 `;
 
-// --- AVATAR MAIOR ---
+// --- AVATAR ---
 export const AvatarContainer = styled.TouchableOpacity`
-  width: 70px;  
-  height: 70px; 
-  border-radius: 35px; 
-  background-color: ${COLORS.white};
+  width: 70px; 
+  height: 70px;
+  border-radius: 35px;
+  background-color: ${(props: any) => props.theme.colors.white};
   justify-content: center;
   align-items: center;
   border-width: 3px;
-  border-color: ${COLORS.whiteTransparent};
+  border-color: ${(props: any) => props.theme.colors.whiteTransparent};
   overflow: hidden;
 `;
 
@@ -54,27 +56,26 @@ export const WelcomeContainer = styled.View`
 `;
 
 export const HeaderTitle = styled.Text`
-  font-size: 26px; 
+  font-size: 26px;
   font-family: 'Montserrat-Bold';
-  color: ${COLORS.white};
+  color: ${(props: any) => props.theme.colors.white};
 `;
 
 export const HeaderSubtitle = styled.Text`
-  font-size: 16px; 
+  font-size: 16px;
   color: rgba(255, 255, 255, 0.9);
   font-family: 'Montserrat-Regular';
   margin-top: 4px;
 `;
 
-// --- BOTÕES DO MENU MAIORES ---
 export const HeaderIconButton = styled.TouchableOpacity`
-  padding: 12px; 
-  background-color: ${COLORS.whiteTransparent};
-  border-radius: 16px; 
+  padding: 12px;
+  background-color: ${(props: any) => props.theme.colors.whiteTransparent};
+  border-radius: 16px;
   margin-left: 10px;
 `;
 
-// ============= MAIN ACTION =============
+// ============= MAIN ACTION (Registrar Descarte) =============
 export const ActionContainer = styled.View`
   padding: 0 24px;
   margin-top: 10px;
@@ -82,14 +83,14 @@ export const ActionContainer = styled.View`
 
 export const MainActionButton = styled.TouchableOpacity`
   width: 100%;
-  background-color: ${COLORS.primary};
+  background-color: ${(props: any) => props.theme.colors.primary};
   padding: 20px;
   border-radius: 24px;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
   
-  shadow-color: ${COLORS.primary};
+  shadow-color: ${(props: any) => props.theme.colors.primary};
   shadow-offset: 0px 10px;
   shadow-opacity: 0.4;
   shadow-radius: 15px;
@@ -100,7 +101,7 @@ export const IconBox = styled.View`
   width: 50px;
   height: 50px;
   border-radius: 16px;
-  background-color: ${COLORS.whiteTransparent};
+  background-color: ${(props: any) => props.theme.colors.whiteTransparent};
   align-items: center;
   justify-content: center;
 `;
@@ -112,7 +113,7 @@ export const ActionContent = styled.View`
 
 export const ActionTitle = styled.Text`
   font-family: 'Montserrat-Bold';
-  color: ${COLORS.white};
+  color: ${(props: any) => props.theme.colors.white};
   font-size: 18px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -134,6 +135,7 @@ export const TipsSection = styled.View`
 export const SectionTitle = styled.Text`
   font-size: 20px;
   font-family: 'Montserrat-Bold';
-  color: ${COLORS.text};
+  /* A cor do título muda (Preto no Light / Branco no Dark) */
+  color: ${(props: any) => props.theme.colors.text};
   margin-bottom: 15px;
 `;

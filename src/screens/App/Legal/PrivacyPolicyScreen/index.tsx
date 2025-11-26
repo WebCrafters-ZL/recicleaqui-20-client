@@ -4,20 +4,21 @@ import React from 'react';
 import { StatusBar } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { COLORS } from '../../../../constants/colors';
-// Reutilizando os estilos da pasta vizinha (ou copie o arquivo styles.ts para cá se preferir)
+import { useTheme } from 'styled-components/native';
+
 import * as S from '../TermsOfUse/styles'; 
 
 const PrivacyPolicyScreen = () => {
   const navigation = useNavigation();
+  const theme = useTheme(); 
 
   return (
     <S.Container>
-      <StatusBar barStyle="light-content" backgroundColor={COLORS.primary} />
+      <StatusBar barStyle="light-content" backgroundColor={theme.colors.primary} />
       
       <S.Header>
         <S.BackButton onPress={() => navigation.navigate('Settings' as never)}>
-          <MaterialCommunityIcons name="arrow-left" size={24} color={COLORS.white} />
+          <MaterialCommunityIcons name="arrow-left" size={24} color={theme.colors.white} />
         </S.BackButton>
         <S.Title>Política de Privacidade</S.Title>
       </S.Header>

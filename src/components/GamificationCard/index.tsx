@@ -5,7 +5,7 @@ import { View } from 'react-native';
 import styled from 'styled-components/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-// --- Interfaces para os Estilos ---
+// --- Interfaces ---
 interface BadgeProps {
   color: string;
 }
@@ -16,37 +16,42 @@ interface ProgressBarFillProps {
 
 // --- Estilos Locais ---
 const CardContainer = styled.View`
-  margin: 10px 20px 20px;
-  background-color: #ffffff;
+  /* 1. CORREÇÃO DE POSIÇÃO: Margem negativa para subir no header */
+  margin: 20px 20px 20px;
+  
+  /* 2. CORREÇÃO DE TEMA: Fundo dinâmico */
+  background-color: ${(props: any) => props.theme.colors.surface};
+  
   border-radius: 26px;
-  padding: 14px 22px;
+  padding: 16px 24px;
+  
   shadow-color: #000;
   shadow-offset: 0px 4px;
   shadow-opacity: 0.1;
   shadow-radius: 12px;
-  elevation: 8;
-  z-index: 2;
+  elevation: 8; /* Sombra alta para ficar acima do header */
+  z-index: 10;
 `;
 
 const BadgesRow = styled.View`
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 `;
 
 const BadgeContainer = styled.View<BadgeProps>`
   width: 50px;
   height: 50px;
   border-radius: 25px;
-  /* Aqui dizemos explicitamente que props é do tipo BadgeProps */
-  background-color: ${(props: BadgeProps) => props.color};
+  background-color: ${(props: any) => props.color};
   justify-content: center;
   align-items: center;
   border-width: 3px;
-  border-color: #fff;
-  /* Aqui também */
-  shadow-color: ${(props: BadgeProps) => props.color};
+  /* A borda deve combinar com o fundo do cartão */
+  border-color: ${(props: any) => props.theme.colors.surface};
+  
+  shadow-color: ${(props: any) => props.color};
   shadow-offset: 0px 4px;
   shadow-opacity: 0.3;
   shadow-radius: 4px;
@@ -54,13 +59,15 @@ const BadgeContainer = styled.View<BadgeProps>`
 `;
 
 const FeedbackBubble = styled.View`
-  background-color: #FFF8E1;
-  padding: 8px 16px;
+  /* Fundo adaptável: Amarelo no light, Fundo escuro no dark */
+  background-color: ${(props: any) => props.theme.mode === 'dark' ? props.theme.colors.background : '#FFF8E1'};
+  
+  padding: 6px 12px;
   border-radius: 16px;
   align-self: center;
-  margin-bottom: 15px;
+  margin-bottom: 12px;
   border-width: 1px;
-  border-color: #FFE082;
+  border-color: ${(props: any) => props.theme.mode === 'dark' ? props.theme.colors.border : '#FFE082'};
 `;
 
 const FeedbackText = styled.Text`
@@ -71,16 +78,15 @@ const FeedbackText = styled.Text`
 
 const ProgressBarContainer = styled.View`
   height: 18px;
-  background-color: #E0F2F1;
+  background-color: ${(props: any) => props.theme.colors.border}; /* Adaptável */
   border-radius: 10px;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   overflow: hidden;
 `;
 
 const ProgressBarFill = styled.View<ProgressBarFillProps>`
   height: 100%;
-  /* Aqui dizemos explicitamente que props é do tipo ProgressBarFillProps */
-  width: ${(props: ProgressBarFillProps) => props.width};
+  width: ${(props: any) => props.width};
   background-color: #26A69A;
   border-radius: 10px;
 `;
@@ -89,28 +95,29 @@ const ProgressTextRow = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 4px;
 `;
 
 const LevelText = styled.Text`
-  font-size: 28px;
+  font-size: 26px;
   font-family: 'Montserrat-Bold';
-  color: #333;
+  /* Texto muda de cor no dark */
+  color: ${(props: any) => props.theme.colors.text};
 `;
 
 const XpText = styled.Text`
-  font-size: 14px;
+  font-size: 13px;
   font-family: 'Montserrat-Regular';
-  color: #888;
+  color: ${(props: any) => props.theme.colors.textLight};
 `;
 
-// --- Interface do Componente ---
+// --- Componente ---
 interface Props {
   level: number;
   currentXp: number;
   nextXp: number;
 }
 
-// --- Componente ---
 export const GamificationCard = ({ level, currentXp, nextXp }: Props) => {
   const progressPercent = `${(currentXp / nextXp) * 100}%`;
 
@@ -142,7 +149,7 @@ export const GamificationCard = ({ level, currentXp, nextXp }: Props) => {
           <ProgressBarFill width={progressPercent} />
         </ProgressBarContainer>
         
-        <XpText style={{ fontSize: 11, textAlign: 'right', marginTop: 4 }}>
+        <XpText style={{ fontSize: 11, textAlign: 'right' }}>
           Faltam {nextXp - currentXp} XP para o nível {level + 1}
         </XpText>
       </View>

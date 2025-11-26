@@ -6,6 +6,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation, DrawerActions } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useTheme } from 'styled-components/native';
 
 import { useAuth } from '../../../context/AuthContext';
 import { Button, TextInput } from '../../../components';
@@ -48,10 +49,12 @@ const formatCEP = (v: string) => {
 const ProfileScreen = () => {
   const navigation = useNavigation();
   const { signOut } = useAuth();
-  
+
+  const theme = useTheme();
+
   const [permissionStatus, requestPermission] = ImagePicker.useMediaLibraryPermissions();
-  
-  // --- ESTADOS DE CONTROLE ---
+
+  // --- ESTADOS DE CONTROLE ---ç
   const [clientType, setClientType] = useState<'individual' | 'company' | null>(null);
   const [clientId, setClientId] = useState<number | null>(null);
   const [addressId, setAddressId] = useState<number | null>(null);
@@ -61,12 +64,12 @@ const ProfileScreen = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [cpf, setCpf] = useState('');
-  
+
   // Pessoa Jurídica
   const [companyName, setCompanyName] = useState('');
   const [tradeName, setTradeName] = useState('');
   const [cnpj, setCnpj] = useState('');
-  
+
   // Comuns
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
@@ -75,9 +78,9 @@ const ProfileScreen = () => {
   // --- ESTADOS DO ENDEREÇO ---
   const [postalCode, setPostalCode] = useState('');
   const [addressType, setAddressType] = useState('');
-  const [addressName, setAddressName] = useState(''); 
+  const [addressName, setAddressName] = useState('');
   const [number, setNumber] = useState('');
-  const [neighborhood, setNeighborhood] = useState(''); 
+  const [neighborhood, setNeighborhood] = useState('');
   const [city, setCity] = useState('');
   const [state, setState] = useState('');
   const [complement, setComplement] = useState('');
@@ -139,7 +142,7 @@ const ProfileScreen = () => {
 
       // Usa a URL do ambiente ou fallback
       const apiUrl = process.env.EXPO_PUBLIC_API_URL || 'https://berta-journalish-outlandishly.ngrok-free.dev/api/v1';
-      
+
       const response = await fetch(`${apiUrl}/clients/me`, {
         method: 'GET',
         headers: {
@@ -150,18 +153,18 @@ const ProfileScreen = () => {
 
       if (response.ok) {
         const data = await response.json();
-        
+
         // Preenche IDs e Tipos
         setClientId(data.id);
         setClientType(data.type);
-        
+
         // Dados comuns
         setEmail(data.user?.email || '');
         setPhone(formatPhone(data.phone || ''));
         if (data.avatarUrl) {
           setAvatarUri(data.avatarUrl);
         }
-        
+
         // Dados específicos por tipo (Individual vs Company)
         if (data.type === 'individual' && data.individual) {
           setFirstName(data.individual.firstName || '');
@@ -172,7 +175,7 @@ const ProfileScreen = () => {
           setTradeName(data.company.tradeName || '');
           setCnpj(formatCNPJ(data.company.cnpj || ''));
         }
-        
+
         // Dados do endereço
         if (data.address) {
           setAddressId(data.address.id);
@@ -186,7 +189,7 @@ const ProfileScreen = () => {
           setComplement(data.address.additionalInfo || '');
         }
       } else {
-        if (response.status === 404) return; 
+        if (response.status === 404) return;
         throw new Error(`Erro ${response.status}`);
       }
     } catch (error) {
@@ -231,7 +234,7 @@ const ProfileScreen = () => {
       }
 
       const apiUrl = process.env.EXPO_PUBLIC_API_URL || 'https://berta-journalish-outlandishly.ngrok-free.dev/api/v1';
-      
+
       // Monta o payload com base no tipo de cliente
       let payload: any = {
         phone: onlyDigits(phone),
@@ -246,9 +249,9 @@ const ProfileScreen = () => {
           additionalInfo: complement,
         },
       };
-      
+
       let endpoint = '';
-      
+
       if (clientType === 'individual') {
         endpoint = `/clients/individual/${clientId}`;
         payload.firstName = firstName;
@@ -258,7 +261,7 @@ const ProfileScreen = () => {
         payload.companyName = companyName;
         payload.tradeName = tradeName;
       }
-      
+
       const response = await fetch(`${apiUrl}${endpoint}`, {
         method: 'PUT',
         headers: {
@@ -270,7 +273,7 @@ const ProfileScreen = () => {
 
       if (response.ok) {
         Alert.alert("Sucesso", "Dados atualizados com sucesso!");
-        await loadUserData(); 
+        await loadUserData();
       } else {
         const errorData = await response.json();
         Alert.alert("Erro", errorData.message || "Não foi possível atualizar o perfil.");
@@ -291,8 +294,8 @@ const ProfileScreen = () => {
     }
 
     if (passwordStrength < 2) {
-       Alert.alert("Senha Fraca", "A nova senha deve ter no mínimo 8 caracteres, uma letra maiúscula e um número.");
-       return;
+      Alert.alert("Senha Fraca", "A nova senha deve ter no mínimo 8 caracteres, uma letra maiúscula e um número.");
+      return;
     }
 
     if (newPassword !== confirmNewPassword) {
@@ -303,7 +306,7 @@ const ProfileScreen = () => {
     setIsPasswordLoading(true);
     try {
       await new Promise(resolve => setTimeout(resolve, 1500));
-      
+
       Alert.alert("Sucesso", "Senha alterada com sucesso!");
       setCurrentPassword(''); setNewPassword(''); setConfirmNewPassword('');
     } catch (error) {
@@ -331,10 +334,10 @@ const ProfileScreen = () => {
       </S.HeaderBackground>
 
       <S.ContentContainer showsVerticalScrollIndicator={false}>
-        
+
         <S.AvatarWrapper>
-          <S.AvatarImage 
-            source={avatarUri ? { uri: avatarUri } : require('../../../../assets/images/avatar.png')} 
+          <S.AvatarImage
+            source={avatarUri ? { uri: avatarUri } : require('../../../../assets/images/avatar.png')}
           />
           <S.EditIconContainer onPress={handlePickImage} activeOpacity={0.8}>
             <MaterialCommunityIcons name="camera" size={20} color={COLORS.white} />
@@ -346,80 +349,77 @@ const ProfileScreen = () => {
           <S.SectionTitle>
             {clientType === 'company' ? 'Dados da Empresa' : 'Dados Pessoais'}
           </S.SectionTitle>
-          
+
           {/* Renderização Condicional baseada no tipo de cliente */}
           {clientType === 'company' ? (
-             <>
-               <TextInput 
-                 placeholder="Nome Fantasia" 
-                 value={tradeName} 
-                 onChangeText={setTradeName} 
-                 rightIcon={<MaterialCommunityIcons name="office-building" size={20} color={COLORS.gray} />}
-               />
-               <TextInput 
-                 placeholder="Razão Social" 
-                 value={companyName} 
-                 onChangeText={setCompanyName} 
-               />
-               <TextInput 
-                 placeholder="CNPJ" 
-                 value={cnpj} 
-                 editable={false} 
-                 style={{ opacity: 0.6, backgroundColor: '#f0f0f0' }} 
-                 rightIcon={<MaterialCommunityIcons name="card-account-details-outline" size={20} color={COLORS.gray} />} 
-               />
-             </>
+            <>
+              <TextInput
+                placeholder="Nome Fantasia"
+                value={tradeName}
+                onChangeText={setTradeName}
+                rightIcon={<MaterialCommunityIcons name="office-building" size={20} color={COLORS.gray} />}
+              />
+              <TextInput
+                placeholder="Razão Social"
+                value={companyName}
+                onChangeText={setCompanyName}
+              />
+              <TextInput
+                placeholder="CNPJ"
+                value={cnpj}
+                editable={false}
+                style={{ opacity: 0.6, backgroundColor: '#f0f0f0' }}
+                rightIcon={<MaterialCommunityIcons name="card-account-details-outline" size={20} color={COLORS.gray} />}
+              />
+            </>
           ) : (
-             <>
-               <TextInput 
-                 placeholder="Nome" 
-                 value={firstName} 
-                 onChangeText={setFirstName} 
-                 rightIcon={<MaterialCommunityIcons name="account-outline" size={20} color={COLORS.gray} />}
-               />
-               <TextInput 
-                 placeholder="Sobrenome" 
-                 value={lastName} 
-                 onChangeText={setLastName} 
-               />
-               <TextInput 
-                 placeholder="CPF" 
-                 value={cpf} 
-                 editable={false} 
-                 style={{ opacity: 0.6, backgroundColor: '#f0f0f0' }} 
-                 rightIcon={<MaterialCommunityIcons name="card-account-details-outline" size={20} color={COLORS.gray} />} 
-               />
-             </>
+            <>
+              <TextInput
+                placeholder="Nome"
+                value={firstName}
+                onChangeText={setFirstName}
+                rightIcon={<MaterialCommunityIcons name="account-outline" size={20} color={COLORS.gray} />}
+              />
+              <TextInput
+                placeholder="Sobrenome"
+                value={lastName}
+                onChangeText={setLastName}
+              />
+              <TextInput
+                placeholder="CPF"
+                value={cpf}
+                editable={false}
+                rightIcon={<MaterialCommunityIcons name="card-account-details-outline" size={20} color={theme.colors.textLight} />}
+              />
+            </>
           )}
-          
-          <TextInput 
-            placeholder="E-mail" 
-            value={email} 
-            editable={false} 
-            style={{ opacity: 0.6, backgroundColor: '#f0f0f0' }} 
-            rightIcon={<MaterialCommunityIcons name="email-outline" size={20} color={COLORS.gray} />} 
+
+          <TextInput
+            placeholder="E-mail"
+            value={email}
+            editable={false}
+            rightIcon={<MaterialCommunityIcons name="email-outline" size={20} color={theme.colors.textLight} />}
           />
-          
-          <TextInput 
-            placeholder="Telefone" 
-            value={phone} 
-            onChangeText={(t) => setPhone(formatPhone(t))} 
-            keyboardType="phone-pad" 
+
+          <TextInput
+            placeholder="Telefone"
+            value={phone}
+            onChangeText={(t) => setPhone(formatPhone(t))}
+            keyboardType="phone-pad"
             maxLength={15}
-            rightIcon={<MaterialCommunityIcons name="phone-outline" size={20} color={COLORS.gray} />} 
+            rightIcon={<MaterialCommunityIcons name="phone-outline" size={20} color={theme.colors.textLight} />}
           />
         </S.FormCard>
 
-        {/* ENDEREÇO */}
         <S.FormCard>
           <S.SectionTitle>Endereço de Coleta</S.SectionTitle>
-          <TextInput 
-            placeholder="CEP" 
-            value={postalCode} 
-            onChangeText={(t) => setPostalCode(formatCEP(t))} 
-            keyboardType="numeric" 
+          <TextInput
+            placeholder="CEP"
+            value={postalCode}
+            onChangeText={(t) => setPostalCode(formatCEP(t))}
+            keyboardType="numeric"
             maxLength={9}
-            rightIcon={<MaterialCommunityIcons name="map-marker-radius-outline" size={20} color={COLORS.gray} />} 
+            rightIcon={<MaterialCommunityIcons name="map-marker-radius-outline" size={20} color={COLORS.gray} />}
           />
           <S.Row>
             <S.Col flex={3}><TextInput placeholder="Rua" value={addressName} onChangeText={setAddressName} /></S.Col>
@@ -439,22 +439,22 @@ const ProfileScreen = () => {
         {/* SEGURANÇA */}
         <S.FormCard>
           <S.SectionTitle>Alterar Senha</S.SectionTitle>
-          
-          <TextInput 
-            placeholder="Senha Atual" 
-            value={currentPassword} 
-            onChangeText={setCurrentPassword} 
+
+          <TextInput
+            placeholder="Senha Atual"
+            value={currentPassword}
+            onChangeText={setCurrentPassword}
             secureTextEntry={!showCurrentPass}
             rightIcon={<MaterialCommunityIcons name={showCurrentPass ? "eye-off" : "eye"} size={20} color={COLORS.gray} />}
             onRightPress={() => setShowCurrentPass(!showCurrentPass)}
           />
 
           <S.HelperText>Mínimo 8 caracteres, 1 maiúscula e 1 número.</S.HelperText>
-          
-          <TextInput 
-            placeholder="Nova Senha" 
-            value={newPassword} 
-            onChangeText={setNewPassword} 
+
+          <TextInput
+            placeholder="Nova Senha"
+            value={newPassword}
+            onChangeText={setNewPassword}
             secureTextEntry={!showNewPass}
             rightIcon={<MaterialCommunityIcons name={showNewPass ? "eye-off" : "eye"} size={20} color={COLORS.gray} />}
             onRightPress={() => setShowNewPass(!showNewPass)}
@@ -462,18 +462,18 @@ const ProfileScreen = () => {
 
           {/* Barra de Força */}
           {newPassword.length > 0 && (
-              <S.StrengthContainer>
-                <S.StrengthBarContainer>
-                  <S.StrengthBarFill width={`${(passwordStrength / 4) * 100}%`} color={getStrengthColor()} />
-                </S.StrengthBarContainer>
-                <S.StrengthLabel color={getStrengthColor()}>{getStrengthLabel()}</S.StrengthLabel>
-              </S.StrengthContainer>
+            <S.StrengthContainer>
+              <S.StrengthBarContainer>
+                <S.StrengthBarFill width={`${(passwordStrength / 4) * 100}%`} color={getStrengthColor()} />
+              </S.StrengthBarContainer>
+              <S.StrengthLabel color={getStrengthColor()}>{getStrengthLabel()}</S.StrengthLabel>
+            </S.StrengthContainer>
           )}
 
-          <TextInput 
-            placeholder="Confirmar Nova" 
-            value={confirmNewPassword} 
-            onChangeText={setConfirmNewPassword} 
+          <TextInput
+            placeholder="Confirmar Nova"
+            value={confirmNewPassword}
+            onChangeText={setConfirmNewPassword}
             secureTextEntry={!showConfirmPass}
             rightIcon={<MaterialCommunityIcons name={showConfirmPass ? "eye-off" : "eye"} size={20} color={COLORS.gray} />}
             onRightPress={() => setShowConfirmPass(!showConfirmPass)}

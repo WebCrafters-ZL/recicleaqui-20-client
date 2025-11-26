@@ -4,6 +4,7 @@ import React from 'react';
 import { StatusBar, View, ActivityIndicator } from 'react-native';
 import { useFonts } from 'expo-font';
 import { NavigationContainer } from '@react-navigation/native';
+import { ThemeProvider } from './src/context/ThemeContext';
 
 // Importações dos Navegadores
 import AuthNavigator from './src/navigation/AuthNavigator';
@@ -46,8 +47,10 @@ export default function App() {
 
   return (
     <AuthProvider>
-      <StatusBar barStyle="dark-content" />
-      <RootNavigation />
+      <ThemeProvider>
+        <StatusBar barStyle="light-content" /> 
+        <RootNavigation />
+      </ThemeProvider>
     </AuthProvider>
   );
 }

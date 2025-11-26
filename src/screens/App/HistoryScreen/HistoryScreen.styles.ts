@@ -1,18 +1,17 @@
 // Arquivo: src/screens/App/HistoryScreen/HistoryScreen.styles.ts
 
 import styled from 'styled-components/native';
-import { COLORS } from '../../../constants/colors';
 
 export const Container = styled.View`
   flex: 1;
-  background-color: ${COLORS.background};
+  background-color: ${(props: any) => props.theme.colors.background};
 `;
 
 // --- HEADER ---
 export const Header = styled.View`
   padding: 20px;
   padding-top: 60px;
-  background-color: ${COLORS.primary};
+  background-color: ${(props: any) => props.theme.colors.primary};
   height: 140px;
   justify-content: center;
   align-items: center;
@@ -25,21 +24,22 @@ export const Header = styled.View`
 export const Title = styled.Text`
   font-size: 22px;
   font-family: 'Montserrat-Bold';
-  color: ${COLORS.white};
+  color: ${(props: any) => props.theme.colors.white};
   margin-top: 20px;
 `;
 
+// --- CORREÇÃO: Voltamos para MenuButton ---
 export const MenuButton = styled.TouchableOpacity`
   position: absolute;
   top: 60px;
   left: 20px;
   z-index: 10;
   padding: 8px;
-  background-color: ${COLORS.whiteTransparent || 'rgba(255,255,255,0.2)'};
+  background-color: ${(props: any) => props.theme.colors.whiteTransparent};
   border-radius: 12px;
 `;
 
-// --- FILTROS (CHIPS) ---
+// --- FILTROS ---
 export const FilterContainer = styled.View`
   padding-vertical: 15px;
 `;
@@ -51,9 +51,9 @@ interface FilterChipProps {
 export const FilterChip = styled.TouchableOpacity<FilterChipProps>`
   padding: 8px 16px;
   border-radius: 20px;
-  background-color: ${(props: FilterChipProps) => props.isActive ? COLORS.primary : COLORS.white};
+  background-color: ${(props: any) => props.isActive ? props.theme.colors.primary : props.theme.colors.surface};
   border-width: 1px;
-  border-color: ${(props: FilterChipProps) => props.isActive ? COLORS.primary : '#e0e0e0'};
+  border-color: ${(props: any) => props.isActive ? props.theme.colors.primary : props.theme.colors.border};
   margin-right: 10px;
   elevation: 2;
   shadow-color: #000;
@@ -65,30 +65,30 @@ export const FilterChip = styled.TouchableOpacity<FilterChipProps>`
 export const FilterText = styled.Text<FilterChipProps>`
   font-size: 12px;
   font-family: 'Montserrat-Bold';
-  color: ${(props: FilterChipProps) => props.isActive ? COLORS.white : '#666'};
+  color: ${(props: any) => props.isActive ? props.theme.colors.white : props.theme.colors.textLight};
 `;
 
-// --- DATAS (SECTION HEADER) ---
+// --- DATAS ---
 export const SectionHeader = styled.View`
   padding-vertical: 10px;
-  background-color: ${COLORS.background}; 
+  background-color: ${(props: any) => props.theme.colors.background};
   margin-bottom: 5px;
 `;
 
 export const SectionHeaderText = styled.Text`
   font-size: 13px;
   font-family: 'Montserrat-Bold';
-  color: #888;
+  color: ${(props: any) => props.theme.colors.textLight};
   text-transform: uppercase;
   letter-spacing: 1px;
 `;
 
 // --- CARD DO HISTÓRICO ---
 export const HistoryCard = styled.View`
-  background-color: ${COLORS.white};
+  background-color: ${(props: any) => props.theme.colors.surface};
   border-radius: 16px;
   padding: 16px;
-  margin-bottom: 5px; 
+  margin-bottom: 12px;
   
   shadow-color: #000;
   shadow-offset: 0px 2px;
@@ -109,7 +109,7 @@ export const CardHeader = styled.View`
 export const TimeText = styled.Text`
   font-size: 12px;
   font-family: 'Montserrat-Regular';
-  color: #aaa;
+  color: ${(props: any) => props.theme.colors.textLight};
 `;
 
 interface StatusBadgeProps {
@@ -119,7 +119,7 @@ interface StatusBadgeProps {
 export const StatusBadge = styled.View<StatusBadgeProps>`
   padding: 4px 10px;
   border-radius: 12px;
-  background-color: ${(props: StatusBadgeProps) => props.bg};
+  background-color: ${(props: any) => props.bg}; 
 `;
 
 export const StatusText = styled.Text<{ color: string }>`
@@ -138,7 +138,7 @@ export const IconBox = styled.View`
   width: 40px;
   height: 40px;
   border-radius: 20px;
-  background-color: #f0f0f0;
+  background-color: ${(props: any) => props.theme.colors.background};
   align-items: center;
   justify-content: center;
   margin-right: 12px;
@@ -151,14 +151,14 @@ export const InfoContainer = styled.View`
 export const ItemsText = styled.Text`
   font-size: 14px;
   font-family: 'Montserrat-Bold';
-  color: ${COLORS.text};
+  color: ${(props: any) => props.theme.colors.text};
   margin-bottom: 2px;
 `;
 
 export const TypeText = styled.Text`
   font-size: 12px;
   font-family: 'Montserrat-Regular';
-  color: #666;
+  color: ${(props: any) => props.theme.colors.textLight};
 `;
 
 export const XpBadge = styled.View`
@@ -181,6 +181,6 @@ export const EmptyContainer = styled.View`
 export const EmptyText = styled.Text`
   font-size: 16px;
   font-family: 'Montserrat-Bold';
-  color: #999;
+  color: ${(props: any) => props.theme.colors.textLight};
   margin-top: 10px;
 `;

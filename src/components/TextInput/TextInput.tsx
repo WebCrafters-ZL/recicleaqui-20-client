@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { TextInputProps as RNTextInputProps, View, TouchableOpacity } from 'react-native'; 
-import styled from 'styled-components/native';
+import styled, { useTheme } from 'styled-components/native';
 
 type TextInputProps = RNTextInputProps & {
   error?: string;
@@ -14,6 +14,11 @@ type TextInputProps = RNTextInputProps & {
 interface InputWrapperProps {
   hasError: boolean;
   multiline?: boolean;
+  disabled?: boolean; 
+}
+
+interface StyledInputProps {
+  hasRightIcon: boolean;
 }
 
 const Container = styled(View)`
@@ -26,29 +31,42 @@ const InputWrapper = styled(View)<InputWrapperProps>`
   position: relative;
   flex-direction: row;
   align-items: ${(props: InputWrapperProps) => (props.multiline ? 'flex-start' : 'center')};
-  background-color: #fff;
+  
+  /* 2. LÓGICA DE COR DE FUNDO DO CONTAINER */
+  /* Se estiver desabilitado, usa a cor de fundo da tela (efeito vazado). Se não, usa a cor de input padrão. */
+  background-color: ${(props: any) => 
+    props.disabled ? props.theme.colors.background : props.theme.colors.inputBg};
+  
   border-radius: 25px;
   height: ${(props: InputWrapperProps) => (props.multiline ? 'auto' : '55px')};
   min-height: 55px;
   border-width: 1px;
-  border-color: ${(props: InputWrapperProps) => (props.hasError ? '#ff4444' : '#e0e0e0')};
+  
+  /* Se desabilitado, remove a borda ou deixa bem sutil */
+  border-color: ${(props: any) => {
+    if (props.hasError) return props.theme.colors.error;
+    if (props.disabled) return 'transparent'; 
+    return props.theme.colors.border;
+  }};
+  
   padding-left: 20px;
   padding-top: ${(props: InputWrapperProps) => (props.multiline ? '10px' : '0px')};
   padding-bottom: ${(props: InputWrapperProps) => (props.multiline ? '10px' : '0px')};
+  
+  /* Opcional: Diminuir opacidade geral do container */
+  opacity: ${(props: InputWrapperProps) => (props.disabled ? 0.7 : 1)};
 `;
 
-// ADICIONADA A PROPRIEDADE 'hasRightIcon'
-const StyledInput = styled.TextInput<{ hasRightIcon: boolean }>`
+const StyledInput = styled.TextInput<StyledInputProps>`
   flex: 1;
   font-size: 16px;
-  color: #333;
-  /* CORREÇÃO AQUI: Se não tiver ícone, remove o padding extra da direita */
-  padding-right: ${(props: { hasRightIcon: any; }) => (props.hasRightIcon ? '48px' : '20px')};
+  color: ${(props: any) => props.theme.colors.text};
+  padding-right: ${(props: StyledInputProps) => (props.hasRightIcon ? '48px' : '20px')};
   height: 100%; 
 `;
 
 const ErrorText = styled.Text`
-  color: #ff4444;
+  color: ${(props: any) => props.theme.colors.error};
   font-size: 12px;
   margin-top: 4px;
   margin-left: 20px;
@@ -65,22 +83,27 @@ const IconContainer = styled.View`
   elevation: 6;
 `;
 
-const TextInput = ({ error, children, rightIcon, onRightPress, ...props }: TextInputProps) => {
-  // Verificamos se existe um ícone da direita ou children (ícone da esquerda geralmente fica fora do input no layout atual, mas se for interno, ajustamos)
-  const hasRightElement = !!rightIcon || !!children; 
+const TextInput = ({ error, children, rightIcon, onRightPress, editable = true, ...props }: TextInputProps) => {
+  const theme = useTheme();
 
   return (
     <Container>
-      <InputWrapper hasError={!!error} multiline={props.multiline}>
+      <InputWrapper hasError={!!error} multiline={props.multiline} disabled={!editable}>
         <StyledInput
-          placeholderTextColor="#A9A9A9"
-          hasRightIcon={!!rightIcon} // Passamos a flag para o estilo
+          placeholderTextColor={theme.colors.textLight}
+          hasRightIcon={!!rightIcon}
+          editable={editable} 
           {...props}
         />
         
         <IconContainer>
           {rightIcon ? (
-            <TouchableOpacity onPress={onRightPress} activeOpacity={0.7} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+            <TouchableOpacity 
+              onPress={onRightPress} 
+              activeOpacity={0.7} 
+              disabled={!editable && !onRightPress} 
+              hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+            >
               {rightIcon}
             </TouchableOpacity>
           ) : (

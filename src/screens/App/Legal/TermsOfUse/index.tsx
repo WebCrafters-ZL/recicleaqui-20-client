@@ -4,19 +4,22 @@ import React from 'react';
 import { StatusBar } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { COLORS } from '../../../../constants/colors';
-import * as S from '../../Legal/TermsOfUse/styles';
+// Importar o hook do tema
+import { useTheme } from 'styled-components/native';
+
+import * as S from './styles';
 
 const TermsOfUseScreen = () => {
   const navigation = useNavigation();
+  const theme = useTheme(); // <-- Hook para pegar as cores
 
   return (
     <S.Container>
-      <StatusBar barStyle="light-content" backgroundColor={COLORS.primary} />
+      <StatusBar barStyle="light-content" backgroundColor={theme.colors.primary} />
       
       <S.Header>
         <S.BackButton onPress={() => navigation.navigate('Settings' as never)}>
-          <MaterialCommunityIcons name="arrow-left" size={24} color={COLORS.white} />
+          <MaterialCommunityIcons name="arrow-left" size={24} color={theme.colors.white} />
         </S.BackButton>
         <S.Title>Termos de Uso</S.Title>
       </S.Header>
@@ -49,7 +52,6 @@ const TermsOfUseScreen = () => {
           Reservamo-nos o direito de modificar estes termos a qualquer momento. Recomendamos que você revise esta página periodicamente.
         </S.Paragraph>
 
-        {/* Espaço extra no final */}
         <S.SectionTitle></S.SectionTitle> 
       </S.Content>
     </S.Container>

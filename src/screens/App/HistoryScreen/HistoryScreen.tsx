@@ -1,12 +1,12 @@
 // Arquivo: src/screens/App/HistoryScreen/HistoryScreen.tsx
 
-import React, { useState, useEffect } from 'react';
-import { SectionList, View, ActivityIndicator, StatusBar, ScrollView, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native'; // Removido DrawerActions
+import React, { useState, useEffect, useMemo } from 'react';
+import { SectionList, View, ActivityIndicator, StatusBar, ScrollView } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useTheme } from 'styled-components/native';
 
-import { COLORS } from '../../../constants/colors';
 import * as S from './HistoryScreen.styles';
 
 interface HistoryItem {
@@ -21,7 +21,9 @@ interface HistoryItem {
 type FilterType = 'TODOS' | 'PENDING' | 'COMPLETED' | 'CANCELLED';
 
 const HistoryScreen = () => {
-  const navigation = useNavigation<any>(); // <any> permite acessar openDrawer direto
+  const navigation = useNavigation<any>();
+  const theme = useTheme(); 
+  
   const [isLoading, setIsLoading] = useState(true);
   const [historyData, setHistoryData] = useState<HistoryItem[]>([]);
   const [activeFilter, setActiveFilter] = useState<FilterType>('TODOS');
@@ -36,40 +38,11 @@ const HistoryScreen = () => {
       await new Promise(r => setTimeout(r, 1000));
 
       const mockData: HistoryItem[] = [
-        {
-          id: 1,
-          date: '2025-11-25T14:30:00Z',
-          type: 'PICKUP',
-          status: 'PENDING',
-          items: '1 Geladeira, 1 Microondas',
-          xpEarned: 0,
-        },
-        {
-          id: 2,
-          date: '2025-11-25T09:15:00Z',
-          type: 'DROPOFF',
-          status: 'COMPLETED',
-          items: '5kg de Baterias e Cabos',
-          xpEarned: 150,
-        },
-        {
-          id: 3,
-          date: '2025-11-24T16:00:00Z',
-          type: 'PICKUP',
-          status: 'CANCELLED',
-          items: '2 Monitores Antigos',
-          xpEarned: 0,
-        },
-        {
-          id: 4,
-          date: '2025-11-10T11:00:00Z',
-          type: 'DROPOFF',
-          status: 'COMPLETED',
-          items: '1 Celular quebrado',
-          xpEarned: 50,
-        },
+        { id: 1, date: '2025-11-25T14:30:00Z', type: 'PICKUP', status: 'PENDING', items: '1 Geladeira, 1 Microondas', xpEarned: 0 },
+        { id: 2, date: '2025-11-25T09:15:00Z', type: 'DROPOFF', status: 'COMPLETED', items: '5kg de Baterias e Cabos', xpEarned: 150 },
+        { id: 3, date: '2025-11-24T16:00:00Z', type: 'PICKUP', status: 'CANCELLED', items: '2 Monitores Antigos', xpEarned: 0 },
+        { id: 4, date: '2025-11-10T11:00:00Z', type: 'DROPOFF', status: 'COMPLETED', items: '1 Celular quebrado', xpEarned: 50 },
       ];
-
       setHistoryData(mockData);
     } catch (error) {
       console.error(error);
@@ -81,15 +54,11 @@ const HistoryScreen = () => {
   const formatDateHeader = (isoString: string) => {
     const date = new Date(isoString);
     const today = new Date();
-    
     const d1 = new Date(date.getFullYear(), date.getMonth(), date.getDate());
     const d2 = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-
     if (d1.getTime() === d2.getTime()) return 'Hoje';
-    
     d2.setDate(d2.getDate() - 1);
     if (d1.getTime() === d2.getTime()) return 'Ontem';
-
     return date.toLocaleDateString('pt-BR', { day: 'numeric', month: 'long' });
   };
 
@@ -98,28 +67,16 @@ const HistoryScreen = () => {
     return date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
   };
 
-  const sections = React.useMemo(() => {
-    const filtered = historyData.filter(item => 
-      activeFilter === 'TODOS' ? true : item.status === activeFilter
-    );
-
+  const sections = useMemo(() => {
+    const filtered = historyData.filter(item => activeFilter === 'TODOS' ? true : item.status === activeFilter);
     const grouped: { [key: string]: HistoryItem[] } = {};
-    
     filtered.forEach(item => {
       const dateKey = item.date.split('T')[0];
-      if (!grouped[dateKey]) {
-        grouped[dateKey] = [];
-      }
+      if (!grouped[dateKey]) grouped[dateKey] = [];
       grouped[dateKey].push(item);
     });
-
     const sortedKeys = Object.keys(grouped).sort((a, b) => new Date(b).getTime() - new Date(a).getTime());
-
-    return sortedKeys.map(dateKey => ({
-      title: formatDateHeader(dateKey),
-      data: grouped[dateKey]
-    }));
-
+    return sortedKeys.map(dateKey => ({ title: formatDateHeader(dateKey), data: grouped[dateKey] }));
   }, [historyData, activeFilter]);
 
   const getStatusConfig = (status: string) => {
@@ -127,7 +84,7 @@ const HistoryScreen = () => {
       case 'COMPLETED': return { color: '#00C851', bg: '#E8F5E9', label: 'Concluído' };
       case 'PENDING':   return { color: '#FFBB33', bg: '#FFF8E1', label: 'Pendente' };
       case 'CANCELLED': return { color: '#ff4444', bg: '#FFEBEE', label: 'Cancelado' };
-      default: return { color: '#333', bg: '#eee', label: status };
+      default: return { color: theme.colors.text, bg: theme.colors.background, label: status };
     }
   };
 
@@ -149,7 +106,7 @@ const HistoryScreen = () => {
             <MaterialCommunityIcons 
               name={isPickup ? "truck-delivery" : "map-marker-check"} 
               size={24} 
-              color={COLORS.text} 
+              color={theme.colors.text} 
             />
           </S.IconBox>
           
@@ -170,36 +127,28 @@ const HistoryScreen = () => {
 
   return (
     <S.Container>
-      <StatusBar barStyle="light-content" backgroundColor={COLORS.primary} />
+      <StatusBar barStyle="light-content" backgroundColor={theme.colors.primary} />
 
       <S.Header>
-        {/* CORREÇÃO AQUI: Usando navigation.openDrawer() direto */}
+        {/* --- CORREÇÃO: Botão Menu com openDrawer --- */}
         <S.MenuButton onPress={() => navigation.openDrawer()}>
-          <MaterialCommunityIcons name="menu" size={28} color={COLORS.white} />
+          <MaterialCommunityIcons name="menu" size={28} color={theme.colors.white} />
         </S.MenuButton>
         
         <S.Title>Histórico</S.Title>
       </S.Header>
 
-      {/* Filtros */}
       <View style={{ paddingBottom: 5 }}>
-        <ScrollView 
-          horizontal 
-          showsHorizontalScrollIndicator={false} 
-          contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 20 }}
-        >
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 20 }}>
           <S.FilterChip isActive={activeFilter === 'TODOS'} onPress={() => setActiveFilter('TODOS')}>
             <S.FilterText isActive={activeFilter === 'TODOS'}>Todos</S.FilterText>
           </S.FilterChip>
-          
           <S.FilterChip isActive={activeFilter === 'PENDING'} onPress={() => setActiveFilter('PENDING')}>
             <S.FilterText isActive={activeFilter === 'PENDING'}>Pendentes</S.FilterText>
           </S.FilterChip>
-          
           <S.FilterChip isActive={activeFilter === 'COMPLETED'} onPress={() => setActiveFilter('COMPLETED')}>
             <S.FilterText isActive={activeFilter === 'COMPLETED'}>Concluídos</S.FilterText>
           </S.FilterChip>
-
           <S.FilterChip isActive={activeFilter === 'CANCELLED'} onPress={() => setActiveFilter('CANCELLED')}>
             <S.FilterText isActive={activeFilter === 'CANCELLED'}>Cancelados</S.FilterText>
           </S.FilterChip>
@@ -208,7 +157,7 @@ const HistoryScreen = () => {
 
       {isLoading ? (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <ActivityIndicator size="large" color={COLORS.primary} />
+            <ActivityIndicator size="large" color={theme.colors.primary} />
         </View>
       ) : (
         <SectionList
@@ -225,7 +174,7 @@ const HistoryScreen = () => {
           stickySectionHeadersEnabled={false}
           ListEmptyComponent={
             <S.EmptyContainer>
-              <MaterialCommunityIcons name="history" size={60} color="#ddd" />
+              <MaterialCommunityIcons name="history" size={60} color={theme.colors.placeholder} />
               <S.EmptyText>Nenhum registro encontrado.</S.EmptyText>
             </S.EmptyContainer>
           }

@@ -3,18 +3,16 @@
 import React from 'react';
 import styled from 'styled-components/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { PRIMARY_COLOR } from '../../screens/Auth/LoginScreen/LoginScreen.styles';
 
 // --- Estilos Locais do Componente ---
 const Container = styled.TouchableOpacity`
   width: 140px;
   height: 160px;
-  background-color: white;
+  background-color: ${(props: any) => props.theme.colors.surface};
   border-radius: 20px;
   padding: 15px;
   margin-right: 15px;
   justify-content: space-between;
-  
   shadow-color: #000;
   shadow-offset: 0px 2px;
   shadow-opacity: 0.05;
@@ -25,14 +23,14 @@ const Container = styled.TouchableOpacity`
 const Title = styled.Text`
   font-family: 'Montserrat-Bold';
   font-size: 14px;
-  color: ${PRIMARY_COLOR};
+  color: ${(props: any) => props.theme.colors.text};
   margin-top: 10px;
 `;
 
 const Description = styled.Text`
   font-family: 'Montserrat-Regular';
   font-size: 11px;
-  color: #888;
+  color: ${(props: any) => props.theme.colors.textLight};
 `;
 
 // --- Interface ---

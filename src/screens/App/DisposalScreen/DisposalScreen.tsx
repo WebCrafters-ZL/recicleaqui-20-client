@@ -4,6 +4,7 @@ import React, { useState, useCallback } from 'react';
 import { View, Alert, Linking, Platform, Keyboard } from 'react-native';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useTheme } from 'styled-components/native';
 
 import { Button, TextInput } from '../../../components';
 import { COLORS } from '../../../constants/colors';
@@ -11,47 +12,56 @@ import * as S from './DisposalScreen.styles';
 
 type LineType = 'green' | 'brown' | 'blue' | 'white';
 
-// Configuração das Linhas (Agora usando as constantes globais)
-const LINE_CONFIG = {
-  green: { 
-    color: COLORS.lines.green, 
-    bg: COLORS.lines.greenBg, 
-    icon: 'laptop', 
-    title: 'Linha Verde', 
-    desc: 'Computadores, notebooks e celulares.' 
-  },
-  brown: { 
-    color: COLORS.lines.brown, 
-    bg: COLORS.lines.brownBg, 
-    icon: 'television-classic', 
-    title: 'Linha Marrom', 
-    desc: 'TVs, monitores e equipamentos de áudio.' 
-  },
-  blue: { 
-    color: COLORS.lines.blue, 
-    bg: COLORS.lines.blueBg, 
-    icon: 'blender', 
-    title: 'Linha Azul', 
-    desc: 'Eletroportáteis: Liquidificadores, secadores.' 
-  },
-  white: { 
-    color: COLORS.lines.white, 
-    bg: COLORS.lines.whiteBg, 
-    icon: 'fridge', 
-    title: 'Linha Branca', 
-    desc: 'Geladeiras, fogões e máquinas de lavar.' 
-  },
-};
-
 const DisposalScreen = () => {
   const navigation = useNavigation<any>();
+  const theme = useTheme(); 
+
   const [step, setStep] = useState(1);
   
   const [selectedLines, setSelectedLines] = useState<LineType[]>([]);
   const [disposalMethod, setDisposalMethod] = useState<'pickup' | 'dropoff' | null>(null);
+  
+  // Campos do Formulário
   const [itemsDescription, setItemsDescription] = useState('');
   const [address, setAddress] = useState('Rua Exemplo, 123 - Centro');
+  
+  // --- NOVOS ESTADOS DE ERRO ---
+  const [itemsError, setItemsError] = useState('');
+  const [addressError, setAddressError] = useState('');
+  
   const [isLoading, setIsLoading] = useState(false);
+
+  // Configuração das Linhas
+  const LINE_CONFIG = {
+    green: { 
+      color: theme.colors.lines.green, 
+      bg: theme.colors.lines.greenBg, 
+      icon: 'laptop', 
+      title: 'Linha Verde', 
+      desc: 'Computadores, notebooks e celulares.' 
+    },
+    brown: { 
+      color: theme.colors.lines.brown, 
+      bg: theme.colors.lines.brownBg, 
+      icon: 'television-classic', 
+      title: 'Linha Marrom', 
+      desc: 'TVs, monitores e equipamentos de áudio.' 
+    },
+    blue: { 
+      color: theme.colors.lines.blue, 
+      bg: theme.colors.lines.blueBg, 
+      icon: 'blender', 
+      title: 'Linha Azul', 
+      desc: 'Eletroportáteis: Liquidificadores, secadores.' 
+    },
+    white: { 
+      color: theme.colors.lines.white, 
+      bg: theme.colors.lines.whiteBg, 
+      icon: 'fridge', 
+      title: 'Linha Branca', 
+      desc: 'Geladeiras, fogões e máquinas de lavar.' 
+    },
+  };
 
   const collectionPoints = [
     { id: 1, name: 'Ecoponto Central', address: 'Av. Paulista, 1578, São Paulo', distance: '1.2 km', lines: ['green', 'brown', 'blue', 'white'] },
@@ -64,6 +74,8 @@ const DisposalScreen = () => {
     setSelectedLines([]);
     setDisposalMethod(null);
     setItemsDescription('');
+    setItemsError('');
+    setAddressError('');
     setIsLoading(false);
   };
 
@@ -94,11 +106,24 @@ const DisposalScreen = () => {
     }
   };
 
+  // --- VALIDAÇÃO E ENVIO ATUALIZADOS ---
   const handleCreateRequest = async () => {
-    if (!itemsDescription) {
-      Alert.alert("Atenção", "Descreva os itens que serão coletados.");
-      return;
+    let isValid = true;
+    setItemsError('');
+    setAddressError('');
+
+    if (!itemsDescription.trim()) {
+      setItemsError('Por favor, descreva os itens.');
+      isValid = false;
     }
+
+    if (!address.trim()) {
+      setAddressError('O endereço de retirada é obrigatório.');
+      isValid = false;
+    }
+
+    if (!isValid) return;
+
     setIsLoading(true);
     await new Promise(r => setTimeout(r, 2000));
     setIsLoading(false);
@@ -161,31 +186,31 @@ const DisposalScreen = () => {
       <S.SelectionCard 
         selected={disposalMethod === 'pickup'} 
         onPress={() => setDisposalMethod('pickup')}
+        color={theme.colors.methods.pickup}
       >
-        {/* Usando COLORS.methods */}
-        <S.IconContainer color={COLORS.methods.pickupBg}>
-          <MaterialCommunityIcons name="truck-delivery" size={28} color={COLORS.methods.pickup} />
+        <S.IconContainer color={theme.colors.methods.pickupBg}>
+          <MaterialCommunityIcons name="truck-delivery" size={28} color={theme.colors.methods.pickup} />
         </S.IconContainer>
         <S.CardContent>
           <S.CardTitle>Coleta em Casa</S.CardTitle>
           <S.CardDescription>Agendamos a retirada no seu endereço.</S.CardDescription>
         </S.CardContent>
-        {disposalMethod === 'pickup' && <MaterialCommunityIcons name="radiobox-marked" size={24} color={COLORS.methods.pickup} />}
+        {disposalMethod === 'pickup' && <MaterialCommunityIcons name="radiobox-marked" size={24} color={theme.colors.methods.pickup} />}
       </S.SelectionCard>
 
       <S.SelectionCard 
         selected={disposalMethod === 'dropoff'} 
         onPress={() => setDisposalMethod('dropoff')}
+        color={theme.colors.methods.dropoff}
       >
-        {/* Usando COLORS.methods */}
-        <S.IconContainer color={COLORS.methods.dropoffBg}>
-          <MaterialCommunityIcons name="map-marker-check" size={28} color={COLORS.methods.dropoff} />
+        <S.IconContainer color={theme.colors.methods.dropoffBg}>
+          <MaterialCommunityIcons name="map-marker-check" size={28} color={theme.colors.methods.dropoff} />
         </S.IconContainer>
         <S.CardContent>
           <S.CardTitle>Levar a um Ponto</S.CardTitle>
           <S.CardDescription>Você leva até o local mais próximo.</S.CardDescription>
         </S.CardContent>
-        {disposalMethod === 'dropoff' && <MaterialCommunityIcons name="radiobox-marked" size={24} color={COLORS.methods.dropoff} />}
+        {disposalMethod === 'dropoff' && <MaterialCommunityIcons name="radiobox-marked" size={24} color={theme.colors.methods.dropoff} />}
       </S.SelectionCard>
 
       <S.ButtonContainer>
@@ -203,18 +228,20 @@ const DisposalScreen = () => {
       <TextInput 
         placeholder="Ex: 1 Geladeira antiga, 2 Monitores..."
         value={itemsDescription}
-        onChangeText={setItemsDescription}
+        onChangeText={(t) => { setItemsDescription(t); setItemsError(''); }} 
         multiline
         numberOfLines={4}
-        style={S.textAreaStyle} 
+        style={S.textAreaStyle}
+        error={itemsError} 
       />
 
       <S.FormLabel>Endereço de Retirada</S.FormLabel>
       <TextInput 
         value={address}
-        onChangeText={setAddress}
+        onChangeText={(t) => { setAddress(t); setAddressError(''); }} 
         placeholder="Seu endereço"
-        rightIcon={<MaterialCommunityIcons name="pencil" size={20} color={COLORS.textLight} />}
+        rightIcon={<MaterialCommunityIcons name="pencil" size={20} color={theme.colors.textLight} />}
+        error={addressError} 
       />
 
       <S.ButtonContainer>
@@ -250,12 +277,12 @@ const DisposalScreen = () => {
             </S.PointDistance>
 
             <S.PointFooter>
-               <MaterialCommunityIcons name="directions" size={18} color={COLORS.primary} />
+               <MaterialCommunityIcons name="directions" size={18} color={theme.colors.primary} />
                <S.CardActionText>Traçar Rota</S.CardActionText>
                <MaterialCommunityIcons 
                  name="chevron-right" 
                  size={18} 
-                 color={COLORS.gray} 
+                 color={theme.colors.textLight} 
                  style={{ marginLeft: 'auto' }} 
                />
             </S.PointFooter>
