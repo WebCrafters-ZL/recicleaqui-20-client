@@ -16,15 +16,10 @@ interface ProgressBarFillProps {
 
 // --- Estilos Locais ---
 const CardContainer = styled.View`
-  /* 1. CORREÇÃO DE POSIÇÃO: Margem negativa para subir no header */
   margin: 20px 20px 20px;
-  
-  /* 2. CORREÇÃO DE TEMA: Fundo dinâmico */
   background-color: ${(props: any) => props.theme.colors.surface};
-  
   border-radius: 26px;
   padding: 16px 24px;
-  
   shadow-color: #000;
   shadow-offset: 0px 4px;
   shadow-opacity: 0.1;
@@ -48,7 +43,6 @@ const BadgeContainer = styled.View<BadgeProps>`
   justify-content: center;
   align-items: center;
   border-width: 3px;
-  /* A borda deve combinar com o fundo do cartão */
   border-color: ${(props: any) => props.theme.colors.surface};
   
   shadow-color: ${(props: any) => props.color};
@@ -59,9 +53,7 @@ const BadgeContainer = styled.View<BadgeProps>`
 `;
 
 const FeedbackBubble = styled.View`
-  /* Fundo adaptável: Amarelo no light, Fundo escuro no dark */
   background-color: ${(props: any) => props.theme.mode === 'dark' ? props.theme.colors.background : '#FFF8E1'};
-  
   padding: 6px 12px;
   border-radius: 16px;
   align-self: center;
@@ -78,7 +70,7 @@ const FeedbackText = styled.Text`
 
 const ProgressBarContainer = styled.View`
   height: 18px;
-  background-color: ${(props: any) => props.theme.colors.border}; /* Adaptável */
+  background-color: ${(props: any) => props.theme.colors.border}; 
   border-radius: 10px;
   margin-bottom: 6px;
   overflow: hidden;

@@ -16,6 +16,7 @@ import SettingsScreen from '../screens/App/SettingsScreen/SettingsScreen';
 import HelpScreen from '../screens/App/HelpScreen/HelpScreen';
 import TermsOfUseScreen from '../screens/App/Legal/TermsOfUse';
 import PrivacyPolicyScreen from '../screens/App/Legal/PrivacyPolicyScreen';
+import ChangePasswordScreen from '../screens/App/ChangePasswordScreen/ChangePasswordScreen';
 
 const Drawer = createDrawerNavigator();
 
@@ -27,19 +28,19 @@ function CustomDrawerContent(props: any) {
   return (
     // Fundo dinâmico (Branco ou Preto)
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
-      
-      <View style={{ 
-        height: 250, 
-        backgroundColor: theme.colors.primary, 
-        justifyContent: 'center', 
-        alignItems: 'center', 
+
+      <View style={{
+        height: 250,
+        backgroundColor: theme.colors.primary,
+        justifyContent: 'center',
+        alignItems: 'center',
         paddingTop: 40,
         paddingBottom: 10,
         borderBottomRightRadius: 30,
       }}>
-        <Image 
-           source={require('../../assets/images/logo-recicle-aqui.png')} 
-           style={{ width: 150, height: 150, resizeMode: 'contain', tintColor: theme.colors.white, marginBottom: -20 }} 
+        <Image
+          source={require('../../assets/images/logo-recicle-aqui.png')}
+          style={{ width: 150, height: 150, resizeMode: 'contain', tintColor: theme.colors.white, marginBottom: -20 }}
         />
         <Text style={{ color: theme.colors.white, fontSize: 24, fontFamily: 'Montserrat-Bold', marginTop: 0 }}>
           Recicle Aqui
@@ -52,7 +53,7 @@ function CustomDrawerContent(props: any) {
         {/* Linha divisória dinâmica */}
         <View style={{ height: 1, backgroundColor: theme.colors.border, marginVertical: 10, marginHorizontal: 20 }} />
 
-        <DrawerItem 
+        <DrawerItem
           label="Configurações"
           icon={({ color }) => <MaterialCommunityIcons name="cog-outline" size={22} color={color} />}
           onPress={() => props.navigation.navigate('Settings')}
@@ -61,8 +62,8 @@ function CustomDrawerContent(props: any) {
           inactiveTintColor={theme.colors.text} // Texto muda cor no dark
           labelStyle={{ fontFamily: 'Montserrat-Bold', marginLeft: -10 }}
         />
-        
-        <DrawerItem 
+
+        <DrawerItem
           label="Ajuda e Suporte"
           icon={({ color }) => <MaterialCommunityIcons name="help-circle-outline" size={22} color={color} />}
           onPress={() => props.navigation.navigate('Help')}
@@ -90,7 +91,7 @@ function CustomDrawerContent(props: any) {
 }
 
 const MainNavigator = () => {
-  const theme = useTheme(); 
+  const theme = useTheme();
 
   return (
     <Drawer.Navigator
@@ -98,9 +99,9 @@ const MainNavigator = () => {
       screenOptions={{
         headerShown: false,
         drawerActiveTintColor: theme.colors.primary,
-        drawerInactiveTintColor: theme.colors.text, 
+        drawerInactiveTintColor: theme.colors.text,
         drawerLabelStyle: { fontFamily: 'Montserrat-Bold', marginLeft: -10 },
-        drawerStyle: { width: '75%', backgroundColor: theme.colors.background }, 
+        drawerStyle: { width: '75%', backgroundColor: theme.colors.background },
         drawerType: 'slide',
       }}
     >
@@ -108,11 +109,13 @@ const MainNavigator = () => {
       <Drawer.Screen name="Disposal" component={DisposalScreen} options={{ drawerIcon: ({ color }) => <MaterialCommunityIcons name="recycle" size={22} color={color} />, drawerLabel: "Registrar Descarte", swipeEnabled: false }} />
       <Drawer.Screen name="History" component={HistoryScreen} options={{ drawerIcon: ({ color }) => <MaterialCommunityIcons name="history" size={22} color={color} />, drawerLabel: "Histórico" }} />
       <Drawer.Screen name="Profile" component={ProfileScreen} options={{ drawerIcon: ({ color }) => <MaterialCommunityIcons name="account-outline" size={22} color={color} />, drawerLabel: "Meu Perfil" }} />
-      
+
       <Drawer.Screen name="Settings" component={SettingsScreen} options={{ drawerItemStyle: { display: 'none' } }} />
       <Drawer.Screen name="Help" component={HelpScreen} options={{ drawerItemStyle: { display: 'none' } }} />
       <Drawer.Screen name="TermsOfUse" component={TermsOfUseScreen} options={{ drawerItemStyle: { display: 'none' }, swipeEnabled: false }} />
       <Drawer.Screen name="PrivacyPolicy" component={PrivacyPolicyScreen} options={{ drawerItemStyle: { display: 'none' }, swipeEnabled: false }} />
+      <Drawer.Screen name="ChangePassword" component={ChangePasswordScreen} options={{ drawerItemStyle: { display: 'none' } }}
+      />
     </Drawer.Navigator>
   );
 };
