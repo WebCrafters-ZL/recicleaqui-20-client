@@ -7,8 +7,6 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation, DrawerActions } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTheme } from 'styled-components/native';
-
-import { useAuth } from '../../../context/AuthContext';
 import { Button, TextInput } from '../../../components';
 import { COLORS } from '../../../constants/colors';
 import * as S from './ProfileScreen.styles';
@@ -48,8 +46,6 @@ const formatCEP = (v: string) => {
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
-  const { signOut } = useAuth();
-
   const theme = useTheme();
 
   const [permissionStatus, requestPermission] = ImagePicker.useMediaLibraryPermissions();
