@@ -117,7 +117,6 @@ const DisposalScreen = () => {
         });
         if (!res.ok) return;
         const data = await res.json();
-        console.log('Dados do cliente:', JSON.stringify(data, null, 2)); // Debug
         // Extrai endereço estruturado - tenta múltiplas localizações possíveis
         let addr = data.address || {};
         
@@ -129,8 +128,6 @@ const DisposalScreen = () => {
             addr = data.company.address;
           }
         }
-        
-        console.log('Endereço extraído:', JSON.stringify(addr, null, 2)); // Debug
         
         if (addr.addressName || addr.city) {
           setAddressData({
@@ -173,7 +170,12 @@ const DisposalScreen = () => {
       .catch((err) => console.error('Erro ao abrir mapa:', err));
   };
 
-  // Busca pontos elegíveis pela API usando linhas e endereço do cliente
+  /**
+   * Busca pontos de coleta elegíveis com base em:
+   * - Linhas selecionadas (green, brown, blue, white -> VERDE, MARROM, AZUL, BRANCA)
+   * - Endereço do cliente (cidade/estado extraídos do perfil)
+   * Retorna: lista de pontos com id, name, address, distance, acceptedLines
+   */
   const fetchEligiblePoints = async () => {
     try {
       const token = await AsyncStorage.getItem('authToken');
@@ -219,7 +221,14 @@ const DisposalScreen = () => {
   };
 
   // --- VALIDAÇÃO E ENVIO ATUALIZADOS ---
-  const handleCreateRequest = async () => {
+  /**
+   * Submete o descarte após validações:
+   * - Descrição dos itens (min 10 caracteres)
+   * - Endereço completo (se pickup)
+   * - Ponto de coleta selecionado (se dropoff)
+   * Envia para API: mode (PICKUP/COLLECTION_POINT), lines, description, clientId
+   */
+  const handleSubmit = async () => {
     setItemsError('');
     setAddressError('');
 
@@ -432,7 +441,7 @@ const DisposalScreen = () => {
       {addressError && <S.ErrorText>{addressError}</S.ErrorText>}
 
       <S.ButtonContainer>
-        <Button title="Solicitar Coleta" onPress={handleCreateRequest} isLoading={isLoading} />
+        <Button title="Solicitar Coleta" onPress={handleSubmit} isLoading={isLoading} />
         <Button title="Voltar" onPress={() => setStep(2)} variant="secondary" />
       </S.ButtonContainer>
     </>
@@ -476,7 +485,7 @@ const DisposalScreen = () => {
 
         <S.ButtonContainer>
            <Button title="Voltar" onPress={() => setStep(2)} variant="secondary" />
-           <Button title="Solicitar Descarte" onPress={handleCreateRequest} disabled={!selectedPointId || isLoading} isLoading={isLoading} />
+           <Button title="Solicitar Descarte" onPress={handleSubmit} disabled={!selectedPointId || isLoading} isLoading={isLoading} />
         </S.ButtonContainer>
       </>
     );

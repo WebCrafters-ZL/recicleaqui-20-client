@@ -233,6 +233,14 @@ export const validateCepConsistency = (
 };
 
 // ========== MAPEAMENTO DE ERROS DO BACKEND ==========
+/**
+ * Mapeia erros estruturados do backend para um objeto plano { campo: mensagem }
+ * Útil para validações server-side que retornam erros aninhados como:
+ * { errors: { individual: { firstName: 'mensagem' }, address: { city: 'mensagem' } } }
+ * 
+ * @param backendErrors - Objeto de erros retornado pela API
+ * @returns Record<string, string> - Objeto plano com chaves como 'firstName', 'address.city'
+ */
 export const mapBackendErrors = (backendErrors: any): Record<string, string> => {
   const fieldErrors: Record<string, string> = {};
 

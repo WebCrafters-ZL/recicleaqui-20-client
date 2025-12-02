@@ -132,7 +132,8 @@ const HomeScreen = () => {
           </View>
 
           <View style={{ flexDirection: 'row' }}>
-            <S.HeaderIconButton onPress={() => console.log('Notificações')}>
+            {/* TODO: Implementar funcionalidade de notificações */}
+            <S.HeaderIconButton onPress={() => {}}>
               <MaterialCommunityIcons name="bell-outline" size={24} color={COLORS.white} />
             </S.HeaderIconButton>
             
