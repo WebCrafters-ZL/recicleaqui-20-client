@@ -1,7 +1,7 @@
 // Arquivo: src/screens/App/ProfileScreen/ProfileScreen.tsx
 
 import React, { useState, useEffect } from 'react';
-import { Alert, View } from 'react-native';
+import { View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation, DrawerActions } from '@react-navigation/native';
@@ -203,6 +203,16 @@ const ProfileScreen = () => {
     }
   };
 
+  /**
+   * Salva o perfil do usuário com validações abrangentes
+   * Valida:
+   * - Campos obrigatórios por tipo (PF: nome/sobrenome, PJ: razão social)
+   * - Telefone (min 10 dígitos)
+   * - CEP (8 dígitos exatos)
+   * - UF (27 estados válidos)
+   * - Endereço completo (nome, número, bairro, cidade)
+   * - Consistência CEP x Cidade/UF (se dados ViaCEP disponíveis)
+   */
   const handleSaveProfile = async () => {
     setIsProfileLoading(true);
     setErrors({});

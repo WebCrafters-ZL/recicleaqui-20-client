@@ -1,7 +1,7 @@
 // Arquivo: src/screens/App/ChangePasswordScreen/ChangePasswordScreen.tsx
 
 import React, { useState, useEffect } from 'react';
-import { Alert, View, StatusBar } from 'react-native';
+import { View, StatusBar } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
