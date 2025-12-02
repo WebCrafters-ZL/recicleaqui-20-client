@@ -20,6 +20,8 @@ const ChangePasswordScreen = () => {
   const [passwordStrength, setPasswordStrength] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [successVisible, setSuccessVisible] = useState(false);
+  const [errorVisible, setErrorVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const [showCurrentPass, setShowCurrentPass] = useState(false);
   const [showNewPass, setShowNewPass] = useState(false);
@@ -60,15 +62,18 @@ const ChangePasswordScreen = () => {
   const handleChangePassword = async () => {
     // Validações de formulário
     if (!currentPassword || !newPassword || !confirmNewPassword) {
-      Alert.alert('Atenção', 'Preencha todos os campos.');
+      setErrorMessage('Preencha todos os campos.');
+      setErrorVisible(true);
       return;
     }
     if (passwordStrength < 2) {
-      Alert.alert('Senha Fraca', 'Mínimo 8 caracteres, 1 maiúscula e 1 número.');
+      setErrorMessage('Senha fraca: mínimo 8 caracteres, 1 maiúscula e 1 número.');
+      setErrorVisible(true);
       return;
     }
     if (newPassword !== confirmNewPassword) {
-      Alert.alert('Erro', 'As senhas não conferem.');
+      setErrorMessage('As senhas não conferem.');
+      setErrorVisible(true);
       return;
     }
 
@@ -76,7 +81,8 @@ const ChangePasswordScreen = () => {
     try {
       const token = await AsyncStorage.getItem('authToken');
       if (!token) {
-        Alert.alert('Sessão expirada', 'Faça login novamente para alterar sua senha.');
+        setErrorMessage('Sessão expirada. Faça login novamente.');
+        setErrorVisible(true);
         return;
       }
 
@@ -97,12 +103,13 @@ const ChangePasswordScreen = () => {
       if (!response.ok) {
         // Mapeamento simples de erros
         if (response.status === 400 || response.status === 401) {
-          Alert.alert('Falha ao alterar senha', data.message || 'Verifique a senha atual e tente novamente.');
+          setErrorMessage(data.message || 'Verifique a senha atual e tente novamente.');
         } else if (response.status === 429) {
-          Alert.alert('Muitas tentativas', 'Tente novamente em alguns minutos.');
+          setErrorMessage('Muitas tentativas. Tente novamente em alguns minutos.');
         } else {
-          Alert.alert('Erro', data.message || 'Não foi possível alterar a senha.');
+          setErrorMessage(data.message || 'Não foi possível alterar a senha.');
         }
+        setErrorVisible(true);
         return;
       }
         // Sucesso: mostra banner e navega de volta após breve intervalo
@@ -116,7 +123,8 @@ const ChangePasswordScreen = () => {
           navigation.goBack();
         }, 1800);
     } catch (error: any) {
-      Alert.alert('Erro de conexão', error?.message || 'Não foi possível alterar a senha.');
+      setErrorMessage(error?.message || 'Erro de conexão. Não foi possível alterar a senha.');
+      setErrorVisible(true);
     } finally {
       setIsLoading(false);
     }
@@ -134,6 +142,19 @@ const ChangePasswordScreen = () => {
       </S.Header>
 
       <S.Content>
+        {errorVisible && (
+          <View style={{
+            backgroundColor: '#D93025',
+            borderRadius: 8,
+            paddingVertical: 10,
+            paddingHorizontal: 14,
+            marginBottom: 12,
+          }}>
+            <S.Description style={{ color: '#fff', marginBottom: 0 }}>
+              {errorMessage}
+            </S.Description>
+          </View>
+        )}
           {successVisible && (
             <View style={{
               backgroundColor: '#1DB954',
